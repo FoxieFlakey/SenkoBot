@@ -2,12 +2,20 @@ package uwu.foxie.and.pawiu.java.senko_bot;
 
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
+
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
+
 import javax.security.auth.login.LoginException;
 
 import org.apache.logging.log4j.LogManager;
@@ -56,7 +64,7 @@ public class Main {
         }
         
         if (clientID != null)
-            LOGGER.info("Bot invite link: https://discord.com/oauth2/authorize?client_id=" + clientID + "&permission=" + Main.BOT_PERMISSION_BITMASK + "&scope=bot");
+            LOGGER.info("Bot invite link: https://discord.com/oauth2/authorize?client_id=" + clientID + "&permission=" + Main.BOT_PERMISSION_BITMASK + "&scope=bot+applications.commands");
 
         JDABuilder builder = JDABuilder.createDefault(token);
         builder.enableIntents(
@@ -78,7 +86,30 @@ public class Main {
             public void onReady(ReadyEvent event) {
                 LOGGER.info("Bot is ready.");
             }
-        });
+            
+            @Override
+            public void onGuildJoin(GuildJoinEvent event) {
+                Guild guild = event.getGuild();
+                guild.updateCommands().addCommands(
+                    Commands.slash("ping", "Responds with bot's ping to Discord gateway and pong UwU")
+                ).queue();
+            }
+            
+            @Override
+            public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
+                if (!event.getName().equals("ping"))
+                    return;
+              
+                OffsetDateTime sendTime = event.getInteraction().getTimeCreated();
+                OffsetDateTime eventCreationTime = event.getTimeCreated();
+                float ping = sendTime.until(eventCreationTime, ChronoUnit.MICROS) / 1000;
+                
+                StringBuilder reply = new StringBuilder();
+                reply.append("Hello Wold UwU\n");
+                reply.append("Ping from bot to Discord is " + ping + "\n");
+                event.reply(reply.toString()).queue();
+            }
+         });
         builder.build();
     }
 }
