@@ -60,26 +60,20 @@ public class Main {
           GatewayIntent.MESSAGE_CONTENT
         );
         builder.setChunkingFilter(ChunkingFilter.ALL);
-        builder.addEventListeners(new MessageListener());
-        builder.addEventListeners(new ReadyListener());
-        builder.build();
-    }
-
-    public static class MessageListener extends ListenerAdapter {
-        @Override
-        public void onMessageReceived(MessageReceivedEvent event) {
-            Message msg = event.getMessage();
-            if (msg.getAuthor().isBot()) {
-                return;
+        builder.addEventListeners(new ListenerAdapter() {
+            @Override
+            public void onMessageReceived(MessageReceivedEvent event) {
+                Message msg = event.getMessage();
+                if (msg.getAuthor().isBot())
+                    return;
+                System.out.println("Received message: " + msg.getContentDisplay());
             }
-            System.out.println("Received message: " + msg.getContentDisplay());
-        }
-    }
-
-    public static class ReadyListener extends ListenerAdapter {
-        @Override
-        public void onReady(ReadyEvent event) {
-            System.out.println("Bot is ready.");
-        }
+            
+            @Override
+            public void onReady(ReadyEvent event) {
+                System.out.println("Bot is ready.");
+            }
+        });
+        builder.build();
     }
 }
