@@ -24,7 +24,11 @@ public class Main {
         }
 
         JDABuilder builder = JDABuilder.createDefault(token);
-        builder.enableIntents(GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MEMBERS);
+        builder.enableIntents(
+          GatewayIntent.GUILD_MESSAGES,
+          GatewayIntent.GUILD_MEMBERS,
+          GatewayIntent.MESSAGE_CONTENT
+        );
         builder.setChunkingFilter(ChunkingFilter.ALL);
         builder.addEventListeners(new MessageListener());
         builder.addEventListeners(new ReadyListener());
