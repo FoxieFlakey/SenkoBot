@@ -51,11 +51,12 @@ public class Main {
         }
         
         if (clientID == null || clientID.isEmpty()) {
-            LOGGER.fatal("Client ID not found in .env file");
+            LOGGER.warn("Client ID not found in .env file. Invite link will not be generated");
             System.exit(1);
         }
         
-        LOGGER.info("Bot invite link: https://discord.com/oauth2/authorize?client_id=" + clientID + "&permission=" + Main.BOT_PERMISSION_BITMASK + "&scope=bot");
+        if (clientID != null)
+          LOGGER.info("Bot invite link: https://discord.com/oauth2/authorize?client_id=" + clientID + "&permission=" + Main.BOT_PERMISSION_BITMASK + "&scope=bot");
 
         JDABuilder builder = JDABuilder.createDefault(token);
         builder.enableIntents(
