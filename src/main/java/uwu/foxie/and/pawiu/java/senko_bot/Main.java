@@ -56,7 +56,7 @@ public class Main {
         }
         
         if (clientID != null)
-          LOGGER.info("Bot invite link: https://discord.com/oauth2/authorize?client_id=" + clientID + "&permission=" + Main.BOT_PERMISSION_BITMASK + "&scope=bot");
+            LOGGER.info("Bot invite link: https://discord.com/oauth2/authorize?client_id=" + clientID + "&permission=" + Main.BOT_PERMISSION_BITMASK + "&scope=bot");
 
         JDABuilder builder = JDABuilder.createDefault(token);
         builder.enableIntents(
