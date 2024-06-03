@@ -10,6 +10,9 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.ChunkingFilter;
 import javax.security.auth.login.LoginException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class Main {
@@ -34,6 +37,7 @@ public class Main {
         // Create polls
         Permission.MESSAGE_SEND_POLLS
     );
+    private static final Logger LOGGER = LogManager.getLogger(Main.class);
 
     public static void main(String[] args) throws LoginException {
         // get token from .env file
@@ -42,16 +46,16 @@ public class Main {
         String clientID = dotenv.get("CLIENT_ID");
         
         if (token == null || token.isEmpty()) {
-            System.err.println("Token not found in .env file.");
+            LOGGER.fatal("Token not found in .env file");
             System.exit(1);
         }
         
         if (clientID == null || clientID.isEmpty()) {
-            System.err.println("Client ID not found in .env file.");
+            LOGGER.fatal("Client ID not found in .env file");
             System.exit(1);
         }
         
-        System.out.println("Bot invite link: https://discord.com/oauth2/authorize?client_id=" + clientID + "&permission=" + Main.BOT_PERMISSION_BITMASK + "&scope=bot");
+        LOGGER.info("Bot invite link: https://discord.com/oauth2/authorize?client_id=" + clientID + "&permission=" + Main.BOT_PERMISSION_BITMASK + "&scope=bot");
 
         JDABuilder builder = JDABuilder.createDefault(token);
         builder.enableIntents(
@@ -66,12 +70,12 @@ public class Main {
                 Message msg = event.getMessage();
                 if (msg.getAuthor().isBot())
                     return;
-                System.out.println("Received message: " + msg.getContentDisplay());
+                LOGGER.info("Received message: " + msg.getContentDisplay());
             }
             
             @Override
             public void onReady(ReadyEvent event) {
-                System.out.println("Bot is ready.");
+                LOGGER.info("Bot is ready.");
             }
         });
         builder.build();
