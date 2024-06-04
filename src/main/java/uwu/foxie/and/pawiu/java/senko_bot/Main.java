@@ -23,9 +23,6 @@ import org.apache.logging.log4j.Logger;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
-import uwu.foxie.and.pawiu.java.senko_bot.handlers.SlashCommandsHandler;
-import uwu.foxie.and.pawiu.java.senko_bot.handlers.TxtCommandsHandler;
-
 public class Main {
     private static final long BOT_PERMISSION_BITMASK = Permission.getRaw(
         // View channel and nickname change
@@ -114,24 +111,5 @@ public class Main {
             }
          });
         builder.build();
-    }
-
-    public static class MessageListener extends ListenerAdapter {
-        @Override
-        public void onMessageReceived(MessageReceivedEvent event) {
-            Message msg = event.getMessage();
-            if (msg.getAuthor().isBot()) {
-                return;
-            }
-
-            TxtCommandsHandler.handler(msg);
-        }
-    }
-
-    public static class ReadyListener extends ListenerAdapter {
-        @Override
-        public void onReady(ReadyEvent event) {
-            System.out.println("Bot is ready.");
-        }
     }
 }
